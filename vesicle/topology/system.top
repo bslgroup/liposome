@@ -1,0 +1,17 @@
+#include "toppar/martini_v2.2.itp"
+#include "toppar/martini_v2.0_lipids_all_201506.itp"
+#include "toppar/martini_v2.0_ions.itp"
+
+[ system ]
+; name
+Martini system
+
+[ molecules ]
+; name        number
+CHOL 3243
+DOPC 7568
+CHOL 2843
+DOPC 6633
+W 1857813
+NA 20607
+CL 20607
