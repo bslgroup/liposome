@@ -1,0 +1,44 @@
+#!/bin/bash
+#SBATCH -J Vesi40              # job name
+#SBATCH -e myjob.%j.err       # error file name
+#SBATCH -o myjob.%j.out       # output file name
+#SBATCH -N 4                  # request 4 nodes
+#SBATCH -n 224                # request 4x56=224 MPI tasks
+#SBATCH -p normal             # designate queue
+#SBATCH -t 48:00:00           # designate max run time
+module load gromacs/2022.1
+export OMP_NUM_THREADS=1      # 1 OMP thread per MPI task
+gmx grompp -f step7_production8.mdp -o step7_production8.tpr -c step7_production7.gro -p system.top -r lipidtail_posres.pdb -n index.ndx
+ibrun gmx_mpi mdrun -deffnm step7_production8
+
+#
+#
+#From Pinnacle
+#module load gcc/11.2.1 openmpi/4.1.4 gromacs/2023.2
+#gmx_mpi grompp -f step6.0_minimization.mdp -o step6.0_minimization.tpr -c step5_charmm2gmx.pdb -p system.top -r lipidtail_posres.pdb -n index.ndx
+#mpirun -np 32 gmx_mpi mdrun -deffnm step6.0_minimization
+#
+#gmx_mpi grompp -f step6.1_minimization.mdp -o step6.1_minimization.tpr -c step6.0_minimization.gro -p system.top -r lipidtail_posres.pdb -n index.ndx
+#mpirun -np 32 gmx_mpi mdrun -deffnm step6.1_minimization
+#
+#gmx_mpi grompp -f step6.2_equilibration.mdp -o step6.2_equilibration.tpr -c step6.1_minimization.gro -p system.top -r lipidtail_posres.pdb -n index.ndx
+#mpirun -np 32 gmx_mpi mdrun -deffnm step6.2_equilibration
+#
+#gmx_mpi grompp -f step6.3_equilibration.mdp -o step6.3_equilibration.tpr -c step6.2_equilibration.gro -p system.top -r lipidtail_posres.pdb -n index.ndx
+#mpirun -np 32 gmx_mpi mdrun -deffnm step6.3_equilibration
+#
+#gmx_mpi grompp -f step6.4_equilibration.mdp -o step6.4_equilibration.tpr -c step6.3_equilibration.gro -p system.top -r lipidtail_posres.pdb -n index.ndx
+#mpirun -np 32 gmx_mpi mdrun -deffnm step6.4_equilibration
+#
+#gmx_mpi grompp -f step6.5_equilibration.mdp -o step6.5_equilibration.tpr -c step6.4_equilibration.gro -p system.top -r lipidtail_posres.pdb -n index.ndx
+#mpirun -np 32 gmx_mpi mdrun -deffnm step6.5_equilibration
+#
+#gmx_mpi grompp -f step6.6_equilibration.mdp -o step6.6_equilibration.tpr -c step6.5_equilibration.gro -p system.top -r lipidtail_posres.pdb -n index.ndx
+#mpirun -np 32 gmx_mpi mdrun -deffnm step6.6_equilibration
+
+# Production
+#gmx_mpi grompp -f step7_production.mdp -o step7_production.tpr -c step6.6_equilibration.gro -p system.top -r lipidtail_posres.pdb -n index.ndx
+#mpirun -np 32 gmx_mpi mdrun -deffnm step7_production
+
+
+
