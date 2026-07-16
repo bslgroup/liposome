@@ -1,0 +1,30 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue255;}
+{\*\expandedcolortbl;;\cssrgb\c1680\c19835\c100000;}
+\margl1440\margr1440\vieww22700\viewh12260\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs22 \cf2 \CocoaLigature0 #!/bin/bash\
+#SBATCH -J 10p-sasa              # job name\
+#SBATCH -e myjob.%j.err       # error file name \
+#SBATCH -o myjob.%j.out       # output file name \
+#SBATCH -N 1                  # request 4 nodes\
+#SBATCH -n 56                # request 4x56=224 MPI tasks \
+#SBATCH -p small            # designate queue \
+#SBATCH -t 48:00:00           # designate max run time \
+module load gromacs/2022.1\
+export OMP_NUM_THREADS=1      # 1 OMP thread per MPI task\
+\
+#echo 0 | gmx_mpi sasa -s step7_production.tpr -f extracted_7microsec.xtc -o sasa_membe.xvg\
+#echo 2 | gmx_mpi sasa -s step7_production.tpr -f extracted_7microsec.xtc -o sasa_chol.xvg\
+#echo 3 | gmx_mpi sasa -s step7_production.tpr -f extracted_7microsec.xtc -o sasa_dopc.xvg\
+\
+# Calculate SASA for the entire system (group 0)\
+echo 0 | gmx_mpi sasa -s step7_production.tpr -f extracted_7microsec.xtc -n index.ndx -o sasa_membe.xvg\
+\
+# Calculate SASA for cholesterol (group 2)\
+echo 2 | gmx_mpi sasa -s step7_production.tpr -f extracted_7microsec.xtc -n index.ndx -o sasa_dopc.xvg\
+\
+}
