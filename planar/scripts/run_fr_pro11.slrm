@@ -1,0 +1,28 @@
+#!/bin/bash
+#SBATCH -J 40Plan              # job name
+#SBATCH -e myjob.%j.err       # error file name 
+#SBATCH -o myjob.%j.out       # output file name 
+#SBATCH -N 2                  # request 4 nodes
+#SBATCH -n 112                # request 4x56=224 MPI tasks 
+#SBATCH -p small            # designate queue 
+#SBATCH -t 48:00:00           # designate max run time 
+module load gromacs/2022.1
+export OMP_NUM_THREADS=1      # 1 OMP thread per MPI task
+
+# Equilibration
+
+#gmx_mpi grompp -f step6.2_equilibration.mdp -o step6.2_equilibration.tpr -c step6.1_minimization.gro -p system.top -r step5_charmm2gmx.pdb -n index.ndx -maxwarn 3
+#ibrun gmx_mpi mdrun -deffnm step6.2_equilibration
+#gmx_mpi grompp -f step6.3_equilibration.mdp -o step6.3_equilibration.tpr -c step6.2_equilibration.gro -p system.top -r step5_charmm2gmx.pdb -n index.ndx -maxwarn 3
+#ibrun gmx_mpi mdrun -deffnm step6.3_equilibration
+#gmx_mpi grompp -f step6.4_equilibration.mdp -o step6.4_equilibration.tpr -c step6.3_equilibration.gro -p system.top -r step5_charmm2gmx.pdb -n index.ndx -maxwarn 3
+#ibrun gmx_mpi mdrun -deffnm step6.4_equilibration
+#gmx_mpi grompp -f step6.5_equilibration.mdp -o step6.5_equilibration.tpr -c step6.4_equilibration.gro -p system.top -r step5_charmm2gmx.pdb -n index.ndx -maxwarn 3
+#ibrun gmx_mpi mdrun -deffnm step6.5_equilibration
+#gmx_mpi grompp -f step6.6_equilibration.mdp -o step6.6_equilibration.tpr -c step6.5_equilibration.gro -p system.top -r step5_charmm2gmx.pdb -n index.ndx -maxwarn 3
+#ibrun gmx_mpi mdrun -deffnm step6.6_equilibration
+
+
+# Production
+#gmx_mpi grompp -f step7_production11.mdp -o step7_production11.tpr -c step7_production10.gro -p system.top -n index.ndx
+ibrun gmx_mpi mdrun -deffnm step7_production11

@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH -J 40analysis              # job name
+#SBATCH -e myjob.%j.err       # error file name 
+#SBATCH -o myjob.%j.out       # output file name 
+#SBATCH -N 1                  # request 4 nodes
+#SBATCH -n 56                # request 4x56=224 MPI tasks 
+#SBATCH -p small             # designate queue 
+#SBATCH -t 48:00:00           # designate max run time 
+module load gromacs/2022.1
+export OMP_NUM_THREADS=1      # 1 OMP thread per MPI task
+#gmx grompp -f step7_production8.mdp -o step7_production8.tpr -c step7_production7.gro -p system.top -r lipidtail_posres.pdb -n index.ndx
+echo 0 0 | gmx_mpi rms -f all -n index -s step7_production -o rmsd_new 
+#ibrun gmx_mpi trjcat -cat -f step7_production.xtc step7_production1.xtc step7_production2.xtc step7_production3.xtc step7_production4.xtc step7_production5.xtc step7_production6.xtc step7_production7.xtc -o all.xtc

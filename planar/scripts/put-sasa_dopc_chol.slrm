@@ -1,0 +1,18 @@
+#!/bin/bash
+#SBATCH -J 40p-sasa              # Job name
+#SBATCH -e myjob.%j.err          # Error file name
+#SBATCH -o myjob.%j.out          # Output file name
+#SBATCH -N 1                     # Request 1 node
+#SBATCH -n 56                    # Request 56 MPI tasks
+#SBATCH -p development           # Designate queue
+#SBATCH -t 2:00:00               # Max run time
+
+module load gromacs/2022.1
+export OMP_NUM_THREADS=1         # 1 OMP thread per MPI task
+
+# Run the GROMACS SASA calculation for CHOL
+srun gmx_mpi sasa -s step7_production.tpr -f concatenated-7us-skipped-10.xtc -o sasa_chol.xvg -surface "group 3"
+
+# Run the GROMACS SASA calculation for DOPC
+srun gmx_mpi sasa -s step7_production.tpr -f concatenated-7us-skipped-10.xtc -o sasa_dopc.xvg -surface "group 2"
+

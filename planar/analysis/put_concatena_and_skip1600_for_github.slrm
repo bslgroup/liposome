@@ -1,0 +1,16 @@
+#!/bin/bash
+#SBATCH -J 0_Sp_conca_for_movi              # job name
+#SBATCH -e myjob.%j.err       # error file name
+#SBATCH -o myjob.%j.out       # output file name
+#SBATCH -N 1                # request 4 nodes
+#SBATCH -n 56                # request 4x56=224 MPI tasks
+#SBATCH -p small             # designate queue
+#SBATCH -t 48:00:00           # designate max run time
+module load gromacs/2022.1
+export OMP_NUM_THREADS=1      # 1 OMP thread per MPI task
+
+# Concatenate the trajectory files
+#gmx trjcat -f step7_production1.xtc step7_production2.xtc step7_production3.xtc step7_production4.xtc step7_production5.xtc step7_production6.xtc step7_production7.xtc step7_production8.xtc step7_production9.xtc step7_production10.xtc step7_production11.xtc step7_production12.xtc -cat -o concatenated_for_movei.xtc
+
+# Extract frames from the concatenated trajectory with a skip interval of 1600
+gmx trjconv -f concatenated.xtc -o concatenated_for_github_skipped-1600.xtc -skip 1600
