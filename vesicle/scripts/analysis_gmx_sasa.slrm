@@ -1,0 +1,12 @@
+#!/bin/bash
+#SBATCH -J 40Vesi-sasa              # job name
+#SBATCH -e myjob.%j.err       # error file name 
+#SBATCH -o myjob.%j.out       # output file name 
+#SBATCH -N 1                  # request 4 nodes
+#SBATCH -n 56                # request 4x56=224 MPI tasks 
+#SBATCH -p small            # designate queue 
+#SBATCH -t 24:00:00           # designate max run time 
+module load gromacs/2022.1
+export OMP_NUM_THREADS=1      # 1 OMP thread per MPI task
+
+echo 0 | gmx_mpi sasa -s step7_production.tpr -n index.ndx -f all.xtc
